@@ -58,8 +58,9 @@ jobs:
         with:
           image-ref: local/fastapi-devops-cicd:ci
           format: table
+          scanners: vuln
+          trivyignores: .trivyignore
           ignore-unfixed: true
           vuln-type: os,library
           severity: HIGH,CRITICAL
           exit-code: "1"
-

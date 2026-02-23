@@ -57,8 +57,9 @@ jobs:
         with:
           image-ref: ${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
           format: table
+          scanners: vuln
+          trivyignores: .trivyignore
           ignore-unfixed: true
           vuln-type: os,library
           severity: HIGH,CRITICAL
           exit-code: "1"
-

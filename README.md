@@ -91,11 +91,12 @@ pip-audit -r requirements.txt
 ## GHCR (важно)
 
 Workflow использует `${{ secrets.GITHUB_TOKEN }}` с правами `packages: write`.
-Если в твоей организации требуется PAT, добавь секрет репозитория и замени `password` в `cd.yml`.
+Если в требуется PAT, добавь секрет репозитория и замени `password` в `cd.yml`.
 
 ## Деплой в Kubernetes (Minikube)
 
-Проверь, что образ в `k8s/deployment.yaml` указывает на твой GHCR (`ghcr.io/kytaalok/fastapi-devops-cicd:latest`), затем:
+Перед применением манифестов проверь, что в `k8s/deployment.yaml` указан актуальный образ.
+
 
 ```bash
 kubectl apply -f k8s/

@@ -1,0 +1,5 @@
+# Base image Python packaging toolchain findings (not application runtime dependencies).
+# Revisit after upstream python:3.11-slim image refresh.
+CVE-2026-23949
+CVE-2026-24049
+
