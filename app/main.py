@@ -30,4 +30,3 @@ def root() -> dict[str, str]:
 @app.get("/version")
 def version() -> dict[str, str]:
     return {"version": APP_VERSION}
-
