@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-devops-cicd
+  labels:
+    app: fastapi-devops-cicd
+spec:
+  type: ClusterIP
+  selector:
+    app: fastapi-devops-cicd
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+
