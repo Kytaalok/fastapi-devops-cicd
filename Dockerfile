@@ -25,6 +25,8 @@ COPY --from=builder /wheels /wheels
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install /wheels/* && \
+    # Update base-image bundled tooling packages flagged by Trivy
+    pip install --upgrade "wheel>=0.46.2" "jaraco.context>=6.1.0" && \
     rm -rf /wheels
 
 COPY app ./app
@@ -34,4 +36,3 @@ USER appuser
 EXPOSE 8000
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-
