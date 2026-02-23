@@ -1,11 +1,11 @@
 # fastapi-devops-cicd
 
-DevOps-style FastAPI project with CI/CD, containerization, security checks, and Kubernetes manifests.
+Демо-проект на FastAPI в стиле DevOps: CI/CD, контейнеризация, security-проверки и манифесты Kubernetes.
 
-[![CI](https://github.com/your-github-username/fastapi-devops-cicd/actions/workflows/ci.yml/badge.svg)](https://github.com/your-github-username/fastapi-devops-cicd/actions/workflows/ci.yml)
-[![CD](https://github.com/your-github-username/fastapi-devops-cicd/actions/workflows/cd.yml/badge.svg)](https://github.com/your-github-username/fastapi-devops-cicd/actions/workflows/cd.yml)
+[![CI](https://github.com/Kytaalok/fastapi-devops-cicd/actions/workflows/ci.yml/badge.svg)](https://github.com/Kytaalok/fastapi-devops-cicd/actions/workflows/ci.yml)
+[![CD](https://github.com/Kytaalok/fastapi-devops-cicd/actions/workflows/cd.yml/badge.svg)](https://github.com/Kytaalok/fastapi-devops-cicd/actions/workflows/cd.yml)
 
-## Stack
+## Стек
 
 - FastAPI
 - Pytest
@@ -15,23 +15,34 @@ DevOps-style FastAPI project with CI/CD, containerization, security checks, and 
 - GHCR
 - Kubernetes (Minikube)
 
-## Quick Start (5 minutes)
+## Быстрый старт (5 минут)
 
-### 1) Run locally with Docker Compose
+### 1) Локальный запуск через Docker Compose
 
 ```bash
 cp .env.example .env
 docker compose up --build
 ```
 
-### 2) Open endpoints
+### 2) Открой эндпоинты
 
 - Swagger UI: `http://localhost:8000/docs`
 - Health: `http://localhost:8000/health`
-- Root: `http://localhost:8000/`
-- Version: `http://localhost:8000/version`
+- Корень: `http://localhost:8000/`
+- Версия: `http://localhost:8000/version`
 
-## Local development (without Docker)
+## Локальная разработка (без Docker)
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
+uvicorn app.main:app --reload
+```
+
+Linux/macOS:
 
 ```bash
 python -m venv .venv
@@ -40,7 +51,7 @@ pip install -r requirements-dev.txt
 uvicorn app.main:app --reload
 ```
 
-## Test and quality checks
+## Проверки качества и тесты
 
 ```bash
 ruff check .
@@ -51,40 +62,40 @@ pip-audit -r requirements.txt
 
 ## CI pipeline (`.github/workflows/ci.yml`)
 
-Runs on push/PR to `main`:
+Запускается на `push` и `pull_request` в `main`:
 
-1. Checkout
-2. Setup Python
-3. Install deps
-4. Ruff lint + format check
+1. Checkout репозитория
+2. Установка Python
+3. Установка зависимостей
+4. Ruff lint + проверка форматирования
 5. Pytest
 6. `pip-audit`
-7. Docker image build
-8. Trivy scan
+7. Сборка Docker-образа
+8. Trivy-сканирование уязвимостей
 
 ## CD pipeline (`.github/workflows/cd.yml`)
 
-Runs on push to `main` and tags `v*`:
+Запускается при `push` в `main` и при тегах `v*`:
 
-1. Buildx setup
-2. Login to GHCR
-3. Build and push image
-4. Trivy scan for pushed image
+1. Настройка Buildx
+2. Логин в GHCR
+3. Сборка и push образа
+4. Trivy-сканирование опубликованного образа
 
-Image tags:
+Теги образов:
 
-- `latest` (default branch)
+- `latest` (для default branch)
 - `sha-<commit>`
-- `v*` (git tags, for example `v0.1.0`)
+- `v*` (git-теги, например `v0.1.0`)
 
-## GHCR notes
+## GHCR (важно)
 
-Workflow uses `${{ secrets.GITHUB_TOKEN }}` with `packages: write` permission.
-If your organization requires PAT, add a repo secret and replace `password` in `cd.yml`.
+Workflow использует `${{ secrets.GITHUB_TOKEN }}` с правами `packages: write`.
+Если в твоей организации требуется PAT, добавь секрет репозитория и замени `password` в `cd.yml`.
 
-## Kubernetes (Minikube) deploy
+## Деплой в Kubernetes (Minikube)
 
-Update image in `k8s/deployment.yaml` to your GHCR path, then:
+Проверь, что образ в `k8s/deployment.yaml` указывает на твой GHCR (`ghcr.io/kytaalok/fastapi-devops-cicd:latest`), затем:
 
 ```bash
 kubectl apply -f k8s/
@@ -93,9 +104,8 @@ kubectl port-forward svc/fastapi-devops-cicd 8080:80
 curl http://localhost:8080/health
 ```
 
-Alternative with Minikube service URL:
+Альтернатива через URL от Minikube:
 
 ```bash
 minikube service fastapi-devops-cicd --url
 ```
-
