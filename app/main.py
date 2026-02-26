@@ -1,24 +1,24 @@
 import logging
-import os
 
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
+from pythonjsonlogger.json import JsonFormatter
 
+from app.config import settings
 from app.health import router as health_router
 
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
-APP_VERSION = os.getenv("APP_VERSION", "0.1.0")
-
-logging.basicConfig(
-    level=LOG_LEVEL,
-    format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
-)
+handler = logging.StreamHandler()
+handler.setFormatter(JsonFormatter("%(asctime)s %(levelname)s %(name)s %(message)s"))
+logging.basicConfig(level=settings.log_level.upper(), handlers=[handler])
 logger = logging.getLogger("fastapi-devops-cicd")
 
 app = FastAPI(
     title="FastAPI DevOps CI/CD Demo",
-    version=APP_VERSION,
+    version=settings.app_version,
 )
 app.include_router(health_router)
+
+Instrumentator().instrument(app).expose(app)
 
 
 @app.get("/")
@@ -29,4 +29,4 @@ def root() -> dict[str, str]:
 
 @app.get("/version")
 def version() -> dict[str, str]:
-    return {"version": APP_VERSION}
+    return {"version": settings.app_version}
